@@ -19,7 +19,8 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout Loout;
     LinearLayout L1=null;
     int x1,y1,x2,y2;
-    int[][] x = new int[8][8];;
+    int[][] x = new int[8][8];
+    int[][] pick = new int[8][8];
     int times=0;
     int find=0;
     @Override
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         final LinearLayout Lin= new LinearLayout(this);
         Lin.setBackgroundColor(Color.parseColor("#DCDCDC"));
         Lout.addView(Lin,LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
-        int pick = 0;
+
         /*
         if(x[X][Y]==0)Lin.setBackgroundColor(Color.parseColor("#FFFFFF"));
         else if(x[X][Y]==1)Lin.setBackgroundColor(Color.parseColor("#1E90FF"));
@@ -45,29 +46,32 @@ public class MainActivity extends AppCompatActivity {
 
         Lin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                times++;
-                if(x[X][Y]==0)Lin.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                else if(x[X][Y]==1)Lin.setBackgroundColor(Color.parseColor("#1E90FF"));
-                else if(x[X][Y]==2)Lin.setBackgroundColor(Color.parseColor("#FF0000"));
-                TextView tv =(TextView)findViewById(R.id.Times);
-                tv.setText(Integer.toString(times)+"次");
+                if(pick[X][Y]==0) {
+                    times++;
+                    if (x[X][Y] == 0) Lin.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                    else if (x[X][Y] == 1) Lin.setBackgroundColor(Color.parseColor("#1E90FF"));
+                    else if (x[X][Y] == 2) Lin.setBackgroundColor(Color.parseColor("#FF0000"));
+                    TextView tv = (TextView) findViewById(R.id.Times);
+                    tv.setText(Integer.toString(times) + "次");
 
-                if(x[X][Y]==2){
-                    find++;
-                    if(find==2){
-                        new AlertDialog.Builder(MainActivity.this)
-                                .setIcon(R.drawable.ic_launcher_background)
-                                .setTitle("Message")
-                                .setMessage("恭喜你成功找到了所有的機頭!\n你的使用次數是"+times+"次")
-                                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                    if (x[X][Y] == 2) {
+                        find++;
+                        if (find == 2) {
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setIcon(R.drawable.ic_launcher_background)
+                                    .setTitle("Message")
+                                    .setMessage("恭喜你成功找到了所有的機頭!\n你的使用次數是" + times + "次")
+                                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                                    }
-                                })
-                                .show();
+                                        }
+                                    })
+                                    .show();
+                        }
                     }
                 }
+                pick[X][Y]=1;
             }
         });
     }
@@ -128,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
             for(int i=0;i<8;i++){
                 for(int j=0;j<8;j++){
                     x[i][j]=0;
+                    pick[i][j]=0;
                 }
             }
             /*產生飛機*/
