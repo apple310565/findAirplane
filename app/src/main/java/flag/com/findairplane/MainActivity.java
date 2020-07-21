@@ -10,8 +10,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,10 +22,14 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout Loout;
     LinearLayout L1=null;
     int x1,y1,x2,y2;
-    int[][] x = new int[8][8];
-    int[][] pick = new int[8][8];
+    int n=8;
+    int[][] x=null;
+    int[][] pick=null;
+    int high=800;
     int times=0;
     int find=0;
+    int f=0;
+    int flag=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void produce(final int X,final int Y){
         LinearLayout Lout= new LinearLayout(this);
-        Loout.addView(Lout,100,100);
+        Loout.addView(Lout,(int)((float)high/(float) n),(int)((float)high/(float) n));
         Lout.setPadding(5,5,5,5);
         final LinearLayout Lin= new LinearLayout(this);
         Lin.setBackgroundColor(Color.parseColor("#DCDCDC"));
@@ -60,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                             new AlertDialog.Builder(MainActivity.this)
                                     .setIcon(R.drawable.ic_launcher_background)
                                     .setTitle("Message")
-                                    .setMessage("恭喜你成功找到了所有的機頭!\n你的使用次數是" + times + "次")
+                                    .setMessage("恭喜你成功找到了所有的機頭!\n你使用的次數是" + times + "次。")
                                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -128,33 +135,87 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newGame(){
+        f=0;
         try{
-            for(int i=0;i<8;i++){
-                for(int j=0;j<8;j++){
+            pick = new int[n][n];
+            x = new int[n][n];
+            Spinner spinner2 = (Spinner)findViewById(R.id.spinner_select);
+            final String[] lunch2 = {"8x8","9x9","10x10"};
+            f=0;flag=0;
+            ArrayAdapter<String> lunchList2 = new ArrayAdapter<>(MainActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    lunch2);spinner2.setAdapter(lunchList2);
+                    spinner2.setSelection(n-8);
+            spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if(f==1){
+                        if(lunch2[position].equals("8x8")){
+                            if(flag==1||n!=8) {
+                                Toast.makeText(MainActivity.this, "你選擇了8x8的難度", Toast.LENGTH_SHORT).show();
+                                n = 8;
+                                flag=1;
+                                newGame();
+                            }
+                        }
+                        else if(lunch2[position].equals("9x9")){
+                            if(flag==1||n!=9) {
+                                Toast.makeText(MainActivity.this, "你選擇了9x9的難度", Toast.LENGTH_SHORT).show();
+                                n = 9;
+                                flag = 1;
+                                newGame();
+                            }
+
+                        }
+                        else if(lunch2[position].equals("10x10")){
+                            if(flag==1||n!=10) {
+                                Toast.makeText(MainActivity.this, "你選擇了10x10的難度", Toast.LENGTH_SHORT).show();
+                                n = 10;
+                                flag = 1;
+                                newGame();
+                            }
+                        }
+                        else{
+                            if(flag==1||n!=8) {
+                                Toast.makeText(MainActivity.this, "你選擇了8x8的難度", Toast.LENGTH_SHORT).show();
+                                n = 8;
+                                flag=1;
+                                newGame();
+                            }
+                        }
+                    }
+                    f=1;
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
                     x[i][j]=0;
                     pick[i][j]=0;
                 }
             }
             /*產生飛機*/
             //定中心點
-            x1 = (int) (Math.random()*6+1);
-            if(x1!=1&&x1!=6)y1=(int) (Math.random()*6+1);
-            else y1=(int) (Math.random()*4+2);
+            x1 = (int) (Math.random()*(n-2)+1);
+            if(x1!=1&&x1!=(n-2))y1=(int) (Math.random()*(n-2)+1);
+            else y1=(int) (Math.random()*(n-4)+2);
             //定方向
             int direct=0;//U=0,D=1,L=2,R=3
             if(x1==1)direct=1;
-            else if(x1==6)direct=1;
+            else if(x1==(n-2))direct=1;
             else if(y1==1)direct=2;
-            else if(y1==6)direct=3;
+            else if(y1==(n-2))direct=3;
             else direct=(int) (Math.random()*4);
             draw(x1,y1,direct);
 
             //第二架飛機
             int direct2=0;//U=0,D=1,L=2,R=3
             do{
-                x2 = (int) (Math.random()*6+1);
-                if(x2!=1&&x2!=6)y2=(int) (Math.random()*6+1);
-                else y2=(int) (Math.random()*4+2);
+                x2 = (int) (Math.random()*(n-2)+1);
+                if(x2!=1&&x2!=(n-2))y2=(int) (Math.random()*(n-2)+1);
+                else y2=(int) (Math.random()*(n-4)+2);
                 //定方向
                 if(x2==1)direct2=1;
                 else if(x2==6)direct2=1;
@@ -172,15 +233,16 @@ public class MainActivity extends AppCompatActivity {
             L1= new LinearLayout(this);
             L1.setOrientation(LinearLayout.VERTICAL);
             LL.addView(L1, LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
-            for(int i=0;i<8;i++){
+            for(int i=0;i<n;i++){
                 Loout= new LinearLayout(this);
                 Loout.setOrientation(LinearLayout.HORIZONTAL);
-                L1.addView(Loout, LinearLayout.LayoutParams.MATCH_PARENT,100);
-                for(int j=0;j<8;j++)
+                L1.addView(Loout, LinearLayout.LayoutParams.MATCH_PARENT,(int)((float)high/(float) n));
+                for(int j=0;j<n;j++)
                     produce(i,j);
             }
             TextView tv =(TextView)findViewById(R.id.Times);
             tv.setText(Integer.toString(times)+"次");
+
         }catch (Exception e) {
             e.printStackTrace();
             //Toast.makeText(this,"NewGame: "+e.toString(), Toast.LENGTH_SHORT).show();
