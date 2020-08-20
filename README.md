@@ -4,3 +4,5 @@
 ![image](https://github.com/apple310565/findAirplane/blob/master/airplane1.jpg)
 #### 遊戲畫面
 ![image](https://github.com/apple310565/findAirplane/blob/master/airplane3.jpg)  ....  ![image](https://github.com/apple310565/findAirplane/blob/master/airplane4.jpg) ....  ![image](https://github.com/apple310565/findAirplane/blob/master/airplane5.jpg)
+
+ps. 單純想玩遊戲下載apk檔就可以了
